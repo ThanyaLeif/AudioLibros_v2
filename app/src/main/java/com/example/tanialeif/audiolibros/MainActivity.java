@@ -2,6 +2,7 @@ package com.example.tanialeif.audiolibros;
 
 import android.app.AlertDialog;
 import android.content.SharedPreferences;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -33,6 +34,13 @@ public class MainActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.contenedor_pequeno, primerFragment).commit();
         }
+
+        //Barar de acciones
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        //setSupportActionBar(toolbar);
+        //Botón flotante
+        FloatingActionButton fab = (FloatingActionButton) findViewById(
+                R.id.fab);
     }
 
     public void mostrarDetalle(int id) {
