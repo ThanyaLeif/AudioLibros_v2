@@ -1,26 +1,27 @@
 package com.example.tanialeif.audiolibros;
 
 import android.app.Application;
-import android.support.v7.widget.RecyclerView;
 
 import java.util.Vector;
 
 public class Aplicacion extends Application {
-    private Vector<Libro> vectorLibros;
-    private AdaptadorLibros adaptador;
+
+    private Vector<Libro> vectoLibros;
+    private AdaptadorLibrosFiltro adaptador;
 
     @Override
     public void onCreate() {
         super.onCreate();
-        vectorLibros = Libro.ejemploLibros();
-        adaptador = new AdaptadorLibros(this, vectorLibros);
+        vectoLibros = Libro.ejemploLibros();
+        adaptador = new AdaptadorLibrosFiltro(this, vectoLibros);
     }
 
-    public AdaptadorLibros getAdaptador() {
+    public AdaptadorLibrosFiltro getAdaptador() {
         return adaptador;
     }
 
-    public Vector<Libro> getVectorLibros() {
-        return vectorLibros;
+    public Vector<Libro> getVectoLibros() {
+        return vectoLibros;
     }
+
 }

@@ -3,6 +3,8 @@ package com.example.tanialeif.audiolibros.fragments;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -12,43 +14,47 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.MediaController;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.tanialeif.audiolibros.Aplicacion;
 import com.example.tanialeif.audiolibros.Libro;
+import com.example.tanialeif.audiolibros.MainActivity;
 import com.example.tanialeif.audiolibros.R;
 
 import java.io.IOException;
 
-public class DetalleFragment extends Fragment implements
-        View.OnTouchListener, MediaPlayer.OnPreparedListener,
-        MediaController.MediaPlayerControl {
+public class DetalleFragment extends Fragment implements View.OnTouchListener,
+        MediaPlayer.OnPreparedListener, MediaController.MediaPlayerControl {
+
     public static String ARG_ID_LIBRO = "id_libro";
     MediaPlayer mediaPlayer;
     MediaController mediaController;
-    @Override public View onCreateView(LayoutInflater inflador, ViewGroup
-            contenedor, Bundle savedInstanceState) {
-        View vista = inflador.inflate(R.layout.fragment_detalle,
-                contenedor, false);
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.fragment_detalle, container, false);
         Bundle args = getArguments();
-        if (args != null) {
+        if(args != null) {
             int position = args.getInt(ARG_ID_LIBRO);
-            ponInfoLibro(position, vista);
+            ponInfoLibro(position, view);
         } else {
-            ponInfoLibro(0, vista);
+            ponInfoLibro(0, view);
         }
-        return vista;
+        return view;
     }
-    private void ponInfoLibro(int id, View vista) {
-        Libro libro = ((Aplicacion) getActivity().getApplication())
-                .getVectorLibros().elementAt(id);
-        ((TextView) vista.findViewById(R.id.titulo)).setText(libro.titulo);
-        ((TextView) vista.findViewById(R.id.autor)).setText(libro.autor);
-        ((ImageView) vista.findViewById(R.id.portada))
-                .setImageResource(libro.recursoImagen);
-        vista.setOnTouchListener(this);
-        if (mediaPlayer != null){
+
+    private void ponInfoLibro(int id, View view) {
+        Libro libro = ((Aplicacion)getActivity().getApplication()).getVectoLibros().elementAt(id);
+        ((TextView)view.findViewById(R.id.titulo)).setText(libro.titulo);
+        ((TextView)view.findViewById(R.id.autor)).setText(libro.autor);
+        ((ImageView)view.findViewById(R.id.portada)).setImageResource(libro.recursoImagen);
+
+        view.setOnTouchListener(this);
+
+        if(mediaPlayer != null)
             mediaPlayer.release();
-        }
+
         mediaPlayer = new MediaPlayer();
         mediaPlayer.setOnPreparedListener(this);
         mediaController = new MediaController(getActivity());
@@ -57,71 +63,114 @@ public class DetalleFragment extends Fragment implements
             mediaPlayer.setDataSource(getActivity(), audio);
             mediaPlayer.prepareAsync();
         } catch (IOException e) {
-            Log.e("Audiolibros", "ERROR: No se puede reproducir "+audio,e);
+            Log.e("AudioLibros", "ERROR: No se puede reproducir " + audio, e);
+            Toast.makeText(getActivity(),"ERROR", Toast.LENGTH_SHORT);
         }
     }
+
     public void ponInfoLibro(int id) {
         ponInfoLibro(id, getView());
     }
-    @Override public void onPrepared(MediaPlayer mediaPlayer) {
-        Log.d("Audiolibros", "Entramos en onPrepared de MediaPlayer");
+
+    @Override
+    public void onPrepared(MediaPlayer mp) {
+        Log.d("AudioLibros", "Entramos en onPrepared");
         mediaPlayer.start();
         mediaController.setMediaPlayer(this);
-        mediaController.setAnchorView(getView().findViewById(
-                R.id.fragment_detalle));
-        mediaController.setPadding(0, 0, 0,110);
+        mediaController.setAnchorView(getView());
         mediaController.setEnabled(true);
         mediaController.show();
     }
-    @Override public boolean onTouch(View vista, MotionEvent evento) {
+
+    @Override
+    public boolean onTouch(View v, MotionEvent event) {
         mediaController.show();
         return false;
     }
-    @Override public void onStop() {
+
+
+    @Override
+    public void onStop() {
         mediaController.hide();
         try {
             mediaPlayer.stop();
             mediaPlayer.release();
         } catch (Exception e) {
-            Log.d("Audiolibros", "Error en mediaPlayer.stop()");
+            Log.d("AudioLibros", "Error en mediaPlayer.stop()");
         }
         super.onStop();
     }
-    @Override public boolean canPause() {
+
+    @Override
+    public boolean canPause() {
         return true;
     }
-    @Override public boolean canSeekBackward() {
+
+    @Override
+    public boolean canSeekBackward() {
         return true;
     }
-    @Override public boolean canSeekForward() {
+
+    @Override
+    public boolean canSeekForward() {
         return true;
     }
-    @Override public int getBufferPercentage() {
+
+    @Override
+    public int getBufferPercentage() {
         return 0;
     }
-    @Override public int getCurrentPosition() {
+
+    @Override
+    public int getCurrentPosition() {
         try {
             return mediaPlayer.getCurrentPosition();
-        } catch (Exception e) {
+        }
+        catch (Exception e) {
             return 0;
         }
     }
-    @Override public int getDuration() {
+
+    @Override
+    public int getDuration() {
         return mediaPlayer.getDuration();
     }
-    @Override public boolean isPlaying() {
+
+    @Override
+    public boolean isPlaying() {
         return mediaPlayer.isPlaying();
     }
-    @Override public void pause() {
+
+    @Override
+    public void pause() {
         mediaPlayer.pause();
     }
-    @Override public void seekTo(int pos) {
+
+    @Override
+    public void seekTo(int pos) {
         mediaPlayer.seekTo(pos);
     }
-    @Override public void start() {
+
+    @Override
+    public void start() {
         mediaPlayer.start();
     }
-    @Override public int getAudioSessionId() {
+
+    @Override
+    public int getAudioSessionId() {
         return 0;
+    }
+
+
+    @Override
+    public void onResume() {
+        DetalleFragment fragment =
+                (DetalleFragment)getFragmentManager()
+                        .findFragmentById(R.id.detalle_fragment);
+
+        if (fragment == null) {
+            ((MainActivity)getActivity()).mostrarElementos(false);
+        }
+        super.onResume();
     }
 }
