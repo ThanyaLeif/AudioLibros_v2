@@ -1,5 +1,6 @@
 package com.example.tanialeif.audiolibros;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -39,7 +40,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         int id = item.getItemId();
 
         if (id == R.id.menu_preferencias) {
-            Toast.makeText(this, "Preferencias", Toast.LENGTH_LONG).show();
+            Intent i = new Intent(this, PreferenciasActivity.class);
+            startActivity(i);
             return true;
         } else if (id == R.id.menu_acerca) {
             android.support.v7.app.AlertDialog.Builder builder = new android.support.v7.app.AlertDialog.Builder(this);
