@@ -140,7 +140,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         SharedPreferences pref =
-                getSharedPreferences("com.orlando.audiolibros_internal", MODE_PRIVATE);
+                getSharedPreferences("com.tanialeif.audiolibros_internal", MODE_PRIVATE);
         SharedPreferences.Editor editor = pref.edit();
         editor.putInt("ultimo", id);
         editor.commit();
@@ -148,7 +148,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public void irUltimoVisitado() {
         SharedPreferences pref =
-                getSharedPreferences("com.orlando.audiolibros_internal", MODE_PRIVATE);
+                getSharedPreferences("com.tanialeif.audiolibros_internal", MODE_PRIVATE);
         int id = pref.getInt("ultimo", -1);
         if (id >= 0) {
             mostrarDetalle(id);
